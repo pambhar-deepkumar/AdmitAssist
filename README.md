@@ -24,8 +24,11 @@
     - [New Document Type](#new-document-type)
   - [Testing](#testing)
   - [Contributing](#contributing)
-  - [License](#license)
-  - [Support](#support)
+  - [Development Setup](#development-setup)
+    - [Prerequisites](#prerequisites-1)
+    - [Setting up the development environment](#setting-up-the-development-environment)
+    - [Pre-commit hooks](#pre-commit-hooks)
+    - [Code Style](#code-style)
 
 
 
@@ -166,7 +169,7 @@ conda activate app_eval
 2. Start the application:
 ```bash
 cd app
-streamlit run main.py
+streamlit run app/main.py
 ```
 
 3. Access at `http://localhost:8501`
@@ -211,17 +214,95 @@ python -m pytest tests/
 4. Push to branch
 5. Create Pull Request
 
-## License
-MIT License - see LICENSE file
+## Development Setup
 
-## Support
-- Create an issue for bugs
-- Submit feature requests through issues
-- Check documentation for common questions
+### Prerequisites
+- Python 3.8 or higher
+- Git
 
-This project emphasizes:
-- Modular design
-- Flexible evaluation strategies
-- Efficient resource usage
-- Easy maintenance
-- Clear documentation
+### Setting up the development environment
+
+1. Clone the repository:
+```
+git clone https://github.com/yourusername/application-evaluation-system.git
+cd application-evaluation-system
+```
+
+2. Run the setup script:
+
+For Unix:
+```
+chmod +x setup_dev.sh
+./setup_dev.sh
+```
+
+For Windows:
+```
+setup_dev.bat
+```
+
+This will:
+- Create a virtual environment
+- Install all dependencies
+- Set up pre-commit hooks
+
+### Pre-commit hooks
+
+This project uses pre-commit hooks to maintain code quality. The following checks are performed before each commit:
+
+- Black (code formatting)
+- isort (import sorting)
+- flake8 (linting)
+- Various file checks (trailing whitespace, YAML validation, etc.)
+
+The hooks will automatically fix issues when possible. If they can't, the commit will be rejected with an explanation.
+
+To run the checks manually:
+```
+pre-commit run --all-files
+```
+
+### Code Style
+
+This project follows:
+- Black code style
+- isort for import sorting
+- flake8 for linting
+
+The configuration is maintained in:
+- `pyproject.toml` for Black and isort
+- `.flake8` for flake8
+```
+
+Now, whenever someone tries to commit code, the pre-commit hooks will:
+1. Format the code using Black
+2. Sort imports using isort
+3. Check code quality with flake8
+4. Perform other basic checks
+
+If any of these checks fail:
+- The commit will be prevented
+- The developer will be shown what needs to be fixed
+- In many cases, the issues will be fixed automatically
+
+To use this:
+
+1. Clone the repository
+2. Run the setup script
+3. Start developing
+
+When you try to commit, the hooks will run automatically. If you want to run them manually:
+```bash
+pre-commit run --all-files
+```
+
+This setup ensures:
+- Consistent code formatting
+- Proper import organization
+- Basic code quality standards
+- Easy setup for new developers
+
+The configuration can be adjusted by modifying the respective configuration files:
+- `.pre-commit-config.yaml` for pre-commit hooks
+- `pyproject.toml` for Black and isort
+- `.flake8` for flake8

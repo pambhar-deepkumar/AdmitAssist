@@ -1,0 +1,32 @@
+file_inputs:
+  - name: curriculum_analysis
+    display_name: "Curriculum Analysis"
+    required: true
+    allowed_extensions: [".xlsx", ".xls"]
+    description: "Upload your curriculum analysis in Excel format"
+
+  - name: module_description
+    display_name: "Module Description"
+    required: true
+    allowed_extensions: [".pdf"]
+    description: "Upload your bachelor's degree module description"
+
+  - name: essay
+    display_name: "Essay"
+    required: false
+    allowed_extensions: [".pdf"]
+    description: "Optional: Upload your essay"
+
+  - name: motivation_letter
+    display_name: "Motivation Letter"
+    required: false
+    allowed_extensions: [".pdf"]
+    description: "Optional: Upload your motivation letter"
+
+processing_steps:
+  - name: "Analyzing curriculum"
+    duration: 2
+  - name: "Processing module description"
+    duration: 3
+  - name: "Evaluating documents"
+    duration: 2

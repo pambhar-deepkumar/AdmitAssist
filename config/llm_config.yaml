@@ -1,0 +1,29 @@
+models:
+  gpt4:
+    name: "gpt-4"
+    provider: "openai"
+    temperature: 0
+    max_tokens: 2000
+    cost_per_1k_tokens: 0.03
+    use_for:
+      - "final_evaluation"
+      - "complex_reasoning"
+
+  gpt35:
+    name: "gpt-3.5-turbo"
+    provider: "openai"
+    temperature: 0
+    max_tokens: 1000
+    cost_per_1k_tokens: 0.002
+    use_for:
+      - "initial_screening"
+      - "document_analysis"
+      - "data_extraction"
+
+  embeddings:
+    name: "text-embedding-ada-002"
+    provider: "openai"
+    cost_per_1k_tokens: 0.0001
+    use_for:
+      - "document_embedding"
+      - "similarity_search"
