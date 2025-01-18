@@ -149,7 +149,7 @@ models:
   gpt4:
     name: "gpt-4"
     use_for: ["final_evaluation"]
-  gpt35:
+  gpt3_5:
     name: "gpt-3.5-turbo"
     use_for: ["initial_screening"]
 ```
