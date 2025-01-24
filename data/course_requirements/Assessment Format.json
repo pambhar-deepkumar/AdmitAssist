@@ -1,0 +1,98 @@
+{
+  "Basics in Informatics": {
+    "Modules": [
+      {
+        "Course": "Introduction to Informatics Object-oriented Programming",
+        "Max Credits Awarded": 6,
+        "Content": "",
+        "Learning Outcome": ""
+
+      },
+      {
+        "Course": "Fundamentals of Programming (Exercises & Laboratory)",
+        "Max Credits Awarded": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      },
+      {
+        "Course": "Introduction to Computer Organization and Technology - Computer Architecture",
+        "Max Credits Awarded": 8,
+        "Content": "- Computer systems: basic architecture and organization: Von- Neumann-Computer, machine-instruction cycle, hardware-software interface - The Instruction Set Architecture (ISA): functionality and machineoriented Assembler programming - Micro-programmed implementation of machine instructions - Circuits, sequential circuits, circuit design with a formal language using the example of VHDL - Introduction to computer architecture: microprocessor architectures and systems, parallel and distributed systems,memory systems, I/O",
+        "Learning Outcome": "After attending this module, students are able to understand computer systems as layered abstract machines. They get a first impression of the area of computer architectures and possess the following abilities: They have learned to apply the main concepts of machine-oriented programming, microprogramming and circuit design. They understand the machine instruction cycles based on the underlying hardware at the register transfer level and they are able to classify computer architectures. The understand the basics of modern computer architecture."
+      }
+    ],
+    "Total Credits": 50,
+    "Required credits": "40",
+    "Awarded Points": "25"
+  },
+  "Basics in the field of theoretical informatics": {
+    "Modules": [
+      {
+        "Course": "Information Theory and Theoretical Informatics",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      }
+    ],
+    "Total Credits": 50,
+    "Required credits": "40",
+    "Awarded Points": "25"
+  },
+  "Basics in the field of Cyberphysical Systems": {
+    "modules": [
+      {
+        "Course": "Introduction to Signal Processing",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      },
+      {
+        "Course": "Embedded Systems, Cyber-Physical Systems and Robotics",
+        "Minimum Credits": 8,
+        "Content": "",
+        "Learning Outcome": ""
+      }
+    ],
+    "Total Credits": 50,
+    "Required credits": "5",
+    "Awarded Points": "5"
+  },
+  "Basics in the field of information systems": {
+    "Modules": [
+      {
+        "Course": "Module 1",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      },
+      {
+        "Course": "Module 2",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      }
+    ],
+    "Total Credits": 50,
+    "Required credits": "5",
+    "Awarded Points": "5"
+  },
+  "Mathematical and theoretical basics": {
+    "Modules": [
+      {
+        "Course": "Module 1",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      },
+      {
+        "Course": "Module 2",
+        "Minimum Credits": 6,
+        "Content": "",
+        "Learning Outcome": ""
+      }
+    ],
+    "Total Credits": 50,
+    "Required credits": "25",
+    "Awarded Points": "15"
+  }
+}
