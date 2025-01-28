@@ -1,3 +1,7 @@
+from typing import Tuple
+
+from openpyxl import Workbook
+
 from evaluation_strategies.all_strategies import strategies
 from utils.llm_manager import LLMManager
 
@@ -11,10 +15,9 @@ class ApplicationProcessor:
         if strategy_type not in strategies:
             raise ValueError(f"Unknown strategy type: {strategy_type}")
 
-        return strategies[strategy_type](self.llm_manager, "final_report.xlsx")
+        return strategies[strategy_type](self.llm_manager)
 
-    def process_application(self, uploaded_files):
-        print(uploaded_files)
+    def process_application(self, uploaded_files) -> Tuple[bool, Workbook]:
         try:
             return self.strategy.evaluate(uploaded_files)
         except Exception as e:

@@ -75,6 +75,7 @@ class AssessmentManager:
     - _create_module_rows: Creates RowData objects for each row in a module
     - _get_cell_references: Returns a list of cell references from a given range
     - save: Saves all evaluations and comments back to the Excel file
+    - get_wb: Returns the Excel workbook
     - __iter__: Iterates over all modules
     - __next__: Returns the next module
     """
@@ -138,6 +139,9 @@ class AssessmentManager:
                 if row.comment_cell and row.comment:
                     self.ws[row.comment_cell] = row.comment
         self.wb.save("updated_assessment.xlsx")
+
+    def get_wb(self):
+        return self.wb
 
     def __iter__(self):
         """

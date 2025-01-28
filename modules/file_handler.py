@@ -4,6 +4,8 @@ from pathlib import Path
 
 import yaml
 
+ROOT_DIR = "./user_data"
+
 
 def create_upload_directory():
     """
@@ -11,12 +13,12 @@ def create_upload_directory():
     Returns the path to the created directory.
     """
     # Create base user_data directory if it doesn't exist
-    base_dir = "./user_data"
-    os.makedirs(base_dir, exist_ok=True)
+
+    os.makedirs(ROOT_DIR, exist_ok=True)
 
     # Create timestamped directory
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    upload_dir = os.path.join(base_dir, f"upload_{timestamp}")
+    upload_dir = os.path.join(ROOT_DIR, f"upload_{timestamp}")
     os.makedirs(upload_dir, exist_ok=True)
 
     return upload_dir

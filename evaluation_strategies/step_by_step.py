@@ -1,3 +1,5 @@
+import openpyxl
+
 from .base_strategy import BaseEvaluationStrategy
 
 
@@ -11,4 +13,4 @@ class StepByStepStrategy(BaseEvaluationStrategy):
         4. Additional qualifications
         """
         # Implementation...
-        pass
+        return openpyxl.open(documents["curriculum_analysis"]), True

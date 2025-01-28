@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple
 
+from openpyxl import Workbook
+
 
 class BaseEvaluationStrategy(ABC):
-    def __init__(self, llm_manager, final_report: str):
+    def __init__(self, llm_manager):
         self.llm_manager = llm_manager
-        self.final_report = final_report
 
     @abstractmethod
-    def evaluate(self, documents: Dict[str, Any]) -> Tuple[bool, str]:
+    def evaluate(self, documents: Dict[str, Any]) -> Tuple[bool, Workbook]:
         """
         Implement the evaluation logic
         You will have access to the uploaded documents in the documents dictionary
