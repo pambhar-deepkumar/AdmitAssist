@@ -1,9 +1,11 @@
-from ..utils.document_processor import DocumentProcessor
+from utils.document_processor import DocumentProcessor
+
 from .base_strategy import BaseEvaluationStrategy
 
 
 class ComprehensiveStrategy(BaseEvaluationStrategy):
     def evaluate(self, documents):
+        print(documents)
         documentProcessor = DocumentProcessor(llm_manager=self.llm_manager)
         documentProcessor.process_documents(documents)
 

@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -25,6 +26,35 @@ def initialize_session_state():
         st.session_state.uploaded_files = None
     if "evaluation_report" not in st.session_state:
         st.session_state.evaluation_report = None
+    if "upload_dir" not in st.session_state:
+        st.session_state.upload_dir = None
+    if "saved_file_paths" not in st.session_state:
+        st.session_state.saved_file_paths = {}
+
+
+def create_upload_directory():
+    """Creates a timestamped directory for storing uploaded files"""
+    base_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "user_data"
+    )
+    os.makedirs(base_dir, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    upload_dir = os.path.join(base_dir, f"upload_{timestamp}")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    return upload_dir
+
+
+def save_uploaded_file(uploaded_file, directory):
+    """Saves an uploaded file to the specified directory"""
+    if uploaded_file is None:
+        return None
+
+    file_path = os.path.join(directory, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return file_path
 
 
 def main():
@@ -48,18 +78,31 @@ def main():
 
     # File upload section
     if not st.session_state.processing_started:
+        # Create new upload directory for this session if not exists
+        if st.session_state.upload_dir is None:
+            st.session_state.upload_dir = create_upload_directory()
+
         uploaded_files = {}
+        saved_file_paths = {}
 
         # Create file uploaders based on config
         for file_config in config["file_inputs"]:
-            uploaded_files[file_config["name"]] = create_file_uploader(file_config)
+            uploaded_file = create_file_uploader(file_config)
+            uploaded_files[file_config["name"]] = uploaded_file
+            # Save the file if it was uploaded
+            if uploaded_file is not None:
+                saved_path = save_uploaded_file(
+                    uploaded_file, st.session_state.upload_dir
+                )
+                saved_file_paths[file_config["name"]] = saved_path
 
         # Evaluate button
         if st.button("Evaluate Application"):
             if validate_required_files(uploaded_files, config):
                 st.session_state.processing_started = True
                 st.session_state.uploaded_files = uploaded_files
-                st.experimental_rerun()
+                st.session_state.saved_file_paths = saved_file_paths
+                processor.process_application(saved_file_paths)
             else:
                 st.error("Please upload all required documents.")
 
@@ -71,6 +114,13 @@ def main():
             st.session_state.uploaded_files, config, processor
         )
         if success:
+            # Save evaluation report to the upload directory
+            report_path = os.path.join(
+                st.session_state.upload_dir, "evaluation_report.json"
+            )
+            with open(report_path, "w") as f:
+                f.write(evaluation_report)
+
             st.session_state.processing_complete = True
             st.session_state.evaluation_report = evaluation_report
             st.experimental_rerun()
@@ -81,10 +131,13 @@ def main():
 
         # Add reset button
         if st.button("Evaluate Another Application"):
+            # Reset all session state variables
             st.session_state.processing_started = False
             st.session_state.processing_complete = False
             st.session_state.uploaded_files = None
             st.session_state.evaluation_report = None
+            st.session_state.upload_dir = None
+            st.session_state.saved_file_paths = {}
             st.experimental_rerun()
 
 

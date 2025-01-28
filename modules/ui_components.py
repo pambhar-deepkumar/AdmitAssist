@@ -11,7 +11,7 @@ def create_file_uploader(file_config):
     )
 
 
-def show_processing_screen(uploaded_files, config):
+def show_processing_screen(uploaded_files, config, processor):
     st.header("Processing Application")
 
     # Display uploaded files
@@ -20,6 +20,10 @@ def show_processing_screen(uploaded_files, config):
         file = uploaded_files.get(file_config["name"])
         if file:
             st.text(f"✓ {file_config['display_name']}: {file.name}")
+
+    # Instead of dummy I would now like to call the processor.evaluate method and pass the uploaded_files dictionary to it as an argument to start the evaluation process.
+    # Also if possible suign the processing I would like to display the progress of the evaluation process.
+    # But I am not sure how to do that. Can you help me with that?
 
     # Processing progress bar
     progress_bar = st.progress(0)

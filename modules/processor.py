@@ -10,9 +10,11 @@ class ApplicationProcessor:
     def _get_strategy(self, strategy_type: str):
         if strategy_type not in strategies:
             raise ValueError(f"Unknown strategy type: {strategy_type}")
-        return strategies[strategy_type](self.llm_manager)
+
+        return strategies[strategy_type](self.llm_manager, "final_report.xlsx")
 
     def process_application(self, uploaded_files):
+        print(uploaded_files)
         try:
             return self.strategy.evaluate(uploaded_files)
         except Exception as e:
