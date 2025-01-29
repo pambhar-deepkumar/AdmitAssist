@@ -1,8 +1,8 @@
 import openpyxl
 
+from ..utils.document_processor import DocumentProcessor
 from .base_strategy import BaseEvaluationStrategy
 
-# from utils.document_processor import DocumentProcessor
 # from utils.markdown_parser import MarkdownLLMHelper
 
 

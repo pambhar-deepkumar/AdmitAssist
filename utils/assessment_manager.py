@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 
 import openpyxl
+from enums import TestResult
 from openpyxl.utils.cell import range_boundaries
 
 
@@ -23,12 +24,12 @@ class RowData:
 
     name: str
     credits: float
-    evaluation: bool = None
+    evaluation: TestResult = None
     comment: str = None
     eval_cell: str = None
     comment_cell: str = None
 
-    def set_evaluation(self, evaluation: bool, comment: str):
+    def set_evaluation(self, evaluation: TestResult, comment: str):
         self.evaluation = evaluation
         self.comment = comment
 
@@ -135,7 +136,7 @@ class AssessmentManager:
         for module in self.modules:
             for row in module:
                 if row.eval_cell and row.evaluation:
-                    self.ws[row.eval_cell] = row.evaluation
+                    self.ws[row.eval_cell] = row.evaluation.value
                 if row.comment_cell and row.comment:
                     self.ws[row.comment_cell] = row.comment
         self.wb.save("updated_assessment.xlsx")
