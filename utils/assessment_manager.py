@@ -45,8 +45,13 @@ class ModuleData:
     Implements the __iter__ and __next__ methods to allow iteration over the rows.
     """
 
-    def __init__(self, name: str, rows: list[RowData]):
+    def __init__(
+        self, name: str, content: str, learnOut: str, maxCred: int, rows: list[RowData]
+    ):
         self.name = name
+        self.content = content
+        self.learnOut = learnOut
+        self.maxCred = maxCred
         self.rows = rows
 
     def __iter__(self):
@@ -95,8 +100,19 @@ class AssessmentManager:
             modules = section.get("Modules") or section.get("modules") or []
             for module in modules:
                 module_name = module["Course"]
+                module_content = module["Content"]
+                module_learning_outcome = module["Learning Outcome"]
+                module_max_credit = module["Minimum Credits"]
                 rows = self._create_module_rows(module)
-                self.modules.append(ModuleData(module_name, rows))
+                self.modules.append(
+                    ModuleData(
+                        module_name,
+                        module_content,
+                        module_learning_outcome,
+                        module_max_credit,
+                        rows,
+                    )
+                )
 
     def _create_module_rows(self, module):
         """

@@ -3,7 +3,7 @@
     "Modules": [
       {
         "Course": "Introduction to Informatics",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "The module is concerned with topics such as: - Introduction ++ Basic notions: Problem - algorithm - program ++ Imperative programming constructs - Syntax and semantics ++ Syntax of programming languages: regular expressions and contextfree grammers ++ Semantics of programs: control-flow graphs - Basic data structures I ++ Numbers, strings, arrays ++ Insertion sort - Recursion ++ Binary search ++ Patterns of recursion - Basic data structures II ++ Objects, classes, methods ++ Lists, stacks, queues - Object-oriented programming ++ Inheritance ++ Abstract classes and interfaces ++ Polymorphism - Programming in the large (perspectives) - Concurrency and Threads",
         "Learning Outcome": "Upon successful completion of the module participants understand the essential concepts of computer science on a fundamental, practice-oriented, but scientific level. Concepts of this kind are for example: Algorithms, syntax and semantics, as well as efficiency in terms of memory consumption or time. Participants are then able to solve well-posed algorithmic problems and to implement basic distributed and concurrent applications in Java or a similar object-oriented language. They understand the underlying concepts and models and are therefore able to acquire skills in other imperative and object-oriented programming languages on their own.",
         "Name Location":"B32:B41",
@@ -13,7 +13,7 @@
       },
       {
         "Course": "Fundamentals of Programming (Exercises & Laboratory)",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "Accompanying the module IN0001, assignments may excercise and apply for problem solving concepts, such as: - basic data structures - recursion - objects, classes and methods - lists, queues, and trees - advanced concepts of object-oriented programming - concurrency",
         "Learning Outcome": "After successful completion of the module, participants are acquainted with the programming language Java or a similar object-oriented programming languae and master programming in the small. They are able to realize programs on their own and to apply the fundamental concepts of Informatics as taught in module IN0001, on a basic practical but scientific level.",
         "Name Location":"B42:B51",
@@ -23,7 +23,7 @@
       },
       {
         "Course": "Introduction to Computer Organization and Technology - Computer Architecture",
-        "Max Credits Awarded": 8,
+        "Minimum Credits": 8,
         "Content": "- Computer systems: basic architecture and organization: Von- Neumann-Computer, machine-instruction cycle, hardware-software interface - The Instruction Set Architecture (ISA): functionality and machineoriented Assembler programming - Micro-programmed implementation of machine instructions - Circuits, sequential circuits, circuit design with a formal language using the example of VHDL - Introduction to computer architecture: microprocessor architectures and systems, parallel and distributed systems,memory systems, I/O",
         "Learning Outcome": "After attending this module, students are able to understand computer systems as layered abstract machines. They get a first impression of the area of computer architectures and possess the following abilities: They have learned to apply the main concepts of machine-oriented programming, microprogramming and circuit design. They understand the machine instruction cycles based on the underlying hardware at the register transfer level and they are able to classify computer architectures. The understand the basics of modern computer architecture.",
         "Name Location":"B52:B61",
@@ -33,7 +33,7 @@
       },
       {
         "Course": "Introduction to Software Engineering",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "Software engineering is the the establishment and systematic use of engineering principles, methods, and tools for the division of work, the development and application of extensive, complex software systems. It deals with the production and development of software, the organization and modelling of data structures and objects, and the operation of software systems. Topics of the lecture include, among others: - Modeling with UML - Process models in software development (linear, iterative, agile) - Requirements elicitation and analysis (functional model, dynamic model, and object model) - System design (specification, software architecture, architectural patterns, and design goals) - Object design and implementation (reuse, design patterns, and interface specification) - Testing (component test, integration test, and system test) - Configuration management, build management, and release management - Software maintenance and evolution - Project organization and communication",
         "Learning Outcome": "After successful completion of this module, students are familiar with the basic concepts and methods of the different phases of a project, e.g. modeling the problem, reuse of classes and components, and delivery of the software. They have the ability to select and apply suitable concepts and methods for concrete problems. The students know the most important software engineering terms and workflows and are able to analyze and evaluate given problems. In addition, students can solve concrete problems in software engineering, e.g. with the help of design patterns.",
         "Name Location":"B62:B71",
@@ -43,7 +43,7 @@
       },
       {
         "Course": "Operating Systems and System Software",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "Basic concepts: Operating systems; concurrency; parallel programming; low-level programming (processes, memory, communication, resource management; models (abstract, formal) for concurrency, e.g. petri nets; mutual exclusion, synchronization, deadlocks; compiler/linker/loader with library integration, transition to (adequate) hardware basic, machine-oriented programming and C; I/O especially as preparation for networking)",
         "Learning Outcome": "After visiting this module, students are able to understand the basics, problems and solutions of operating systems and current developments. In addition they understand the components like process and memory management and they are able to analyze and evaluate different strategies and techniques. They learn to apply the acquired basic knowledge to new developments in the area of operating systems as well as system software.",
         "Name Location":"B72:B81",
@@ -53,7 +53,7 @@
       },
       {
         "Course": "Fundamentals of Algorithms and Data Structures",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "First, the module studies the basics of efficiency and complexity analyses. Basic terminology, complexity measures, the Landau symbols and different machine models are introduced. Then, fundamental data structures and algorithmic problems are studied. - Data structures for sequences: Dynamic arrays, lists, stacks and queues are investigated. The complexity of each operation is analyzed. - Hashing: Hashing with chaining, universal hashing as well as various probing methods are examined. Perfect hashing and hash-based algorithms, e.g. for set intersection problems, may also be explored. - Sorting: First, simple algorithms such as InsertionSort, SelectionSort and BubbleSort are reviewed. Then, advanced algorithms such as MergeSort, HeapSort and QuickSort are investigated. Furthermore, sorting-based algorithms, the lower bound for comparison-based sorting, selection, RadixSort and external sorting may be covered. - Priority queues: Binary heaps and binomial heaps are presented in the module. - Search trees: Binary search trees, AVL trees and (a,b)-trees are investigated. - Graph algorithms: Various graph representations, traversal techniques using DFS/BFS, the computation of 2-connected components and strongly connected components, topological sorting, the computation of the shortest paths and minimum spanning trees are covered. Approaches for solving the Traveling Salesman Problem (TSP) may be studied. The module may also cover data compression schemes (Huffman, Lempel-Ziv) and simple pattern matching algorithms.",
         "Learning Outcome": "The participants master the basic algorithms and data structures mentioned above. They are able to independently analyze their complexity and apply the corresponding analysis concepts to related algorithmic problems. Furthermore, the participants are able to use the algorithms and data structures handled, if necessary to modify them and to compare different solutions in their quality.",
         "Name Location":"B82:B91",
@@ -63,7 +63,7 @@
       },
       {
         "Course": "Fundamentals of Databases",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "SQL, data integrity, theory of relational database design, physical data organisation (storage structures, index structures), query processing, transaction management, main features of error handling (recovery, backup) and multiuser synchronisation, security aspects (authorization), XML data modeling (optional); in the tutorial the content is practiced along concrete examples",
         "Learning Outcome": "Students are able to apply the essential concepts of relational database systems and can use and evaluate them systematically and in a qualified manner. The students have the expertise to systematically use a database system starting from the conceptual design to the implementation design to the physical design. They are able to formulate even complex queries in SQL and have a basic understanding of logical and physical optimization based on relational algebra. Furthermore they know how to safe-guard a database application with respect to recovery, concurrency control and authorization.",
         "Name Location":"B92:B101",
@@ -73,7 +73,7 @@
       },
       {
         "Course": "Computer Networking and IT Security",
-        "Max Credits Awarded": 6,
+        "Minimum Credits": 6,
         "Content": "- Computer networking ++ Overview: Computer networking and the Internet +++ components (router, switches, clients, server) +++ design (topology, routing, packets vs. virtual circuits) +++ layered system structure (OSI and Internet) +++ historical background ++ concepts used by multiple layers (covered within the appropriate layers): +++ Addressing +++ Error detection +++ Coding and modulation +++ Media access protocols +++ Flow control +++ Connection management +++ Packet vs. virtual circuit switching ++ Layers: +++ Application layer: application protocols and applications ++++ Tasks and interface ++++ Examples: HTTP, DNS, SMTP (Mail), Peer-to-Peer protocols +++ Transport layer ++++ Tasks and interface ++++ Examples: TCP and UDP +++ Network layer ++++ Tasks and interface ++++ Routing: link state vs. distance vector protocols ++++ Addressing: IP Addresses ++++ Examples: IP, Routing in the Internet +++ Link layer ++++ Tasks and interface ++++ Examples: Ethernet, Wireless LAN +++ Physical layer ++++ Tasks and interface ++++ Examples ++ IT security +++ Basics of cryptography +++ Authentication, privacy, integrity +++ Protocols with security mechanisms, e.g.: IPsec, PGP, Kerberos, SSL, SSH, ... +++ Firewalls, intrusion detection",
         "Learning Outcome": "After successful completion of the module, participants understand the key concepts of technologies and methods of computer networks and distributed systems and are able to use key layered network architecture protocols to explain what protocol mechanisms are used in each layer and how they work. They understand the architecture of distributed applications like the World Wide Web based on Internet protocols, and the architecture of computer networks. Participants can determine the performance of selected networks and distributed applications, and can implement specific protocol mechanisms.",
         "Name Location":"B102:B111",

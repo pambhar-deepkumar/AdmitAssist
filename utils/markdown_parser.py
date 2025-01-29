@@ -89,6 +89,9 @@ class MarkdownLLMHelper:
                     structure_stack[-1]["content"] += text_content + "\n"
         return top_level
 
+    def get_markDown(self):
+        return self._markdown_text
+
     def get_structure(self):
         """
         Return a list of heading items (recursively) that shows the tree structure of the document.
@@ -404,3 +407,59 @@ class MarkdownLLMHelper:
                     {"title": node["title"], "highlighted_snippet": highlighted}
                 )
         return results
+
+    def fuzzy_search_with_lines(self, keyword, num_lines=5, ratio_threshold=0.6):
+        """
+        Perform a fuzzy search for a keyword in the document and extract a specified
+        number of lines (num_lines) around the fuzzy match.
+
+        Args:
+            keyword (str): The keyword to search for using fuzzy matching.
+            num_lines (int): The number of lines to extract starting from the match.
+            ratio_threshold (float): The minimum similarity ratio for fuzzy matches.
+
+        Returns:
+            list: A list of dictionaries containing the matched heading title,
+                matched word, and the extracted lines of content. Returns an
+                empty list if no matches are found.
+        """
+        if not HAS_DIFFLIB:
+            return []
+
+        matches = []
+        all_nodes = []
+
+        # Flatten the structure for easy traversal
+        def walk(nodes):
+            for n in nodes:
+                all_nodes.append(n)
+                if n["children"]:
+                    walk(n["children"])
+
+        walk(self._structure)
+
+        # Iterate through each node and perform a fuzzy search
+        for node in all_nodes:
+            content_lines = node["content"].splitlines()
+
+            # Search for a fuzzy match for the keyword in the content lines
+            for line in content_lines:
+                similarity = SequenceMatcher(
+                    None, line.lower(), keyword.lower()
+                ).ratio()
+
+                if similarity >= ratio_threshold:
+                    # Extract the specified number of lines from this point
+                    line_index = content_lines.index(line)
+                    extracted_lines = content_lines[line_index : line_index + num_lines]
+
+                    matches.append(
+                        {
+                            "title": node["title"],
+                            "matched_line": line,
+                            "content": "\n".join(extracted_lines),
+                        }
+                    )
+                    break  # Stop after the first match in this node (optional)
+
+        return matches
