@@ -1,15 +1,14 @@
 import openpyxl
 
-from utils.document_processor import DocumentProcessor
-
 from .base_strategy import BaseEvaluationStrategy
+
+# from utils.document_processor import DocumentProcessor
+# from utils.markdown_parser import MarkdownLLMHelper
 
 
 class ComprehensiveStrategy(BaseEvaluationStrategy):
     def evaluate(self, documents):
         print("Evaluating application with comprehensive strategy...")
-        documentProcessor = DocumentProcessor(llm_manager=self.llm_manager)
-        documentProcessor.process_documents(documents)
 
         """
         Comprehensive evaluation combining:
@@ -19,6 +18,10 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
         4. Additional qualifications
         """
         # Implementation...
+
+        # Creates a parser for the LLM to retreive relevant content
+        # markdownParser = MarkdownLLMHelper(documents["curriculum_analysis"])
+
         return openpyxl.open(documents["curriculum_analysis"]), True
 
     def retrieveCourse(self, courseName):
