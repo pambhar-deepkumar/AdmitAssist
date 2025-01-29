@@ -23,12 +23,12 @@ class RowData:
 
     name: str
     credits: float
-    evaluation: str = None
+    evaluation: bool = None
     comment: str = None
     eval_cell: str = None
     comment_cell: str = None
 
-    def set_evaluation(self, evaluation: str, comment: str):
+    def set_evaluation(self, evaluation: bool, comment: str):
         self.evaluation = evaluation
         self.comment = comment
 
@@ -172,7 +172,7 @@ if __name__ == "__main__":
             print(f"Processing: {row.name} ({row.credits} ECTS)")
             # Set evaluation and comment for this row if applicable
             if "Informatik" in (row.name or ""):
-                row.set_evaluation("Pass", "Excellent performance")
+                row.set_evaluation(True, "Excellent performance")
 
     # Save all changes to a new Excel file
     manager.save()
