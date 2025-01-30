@@ -3,6 +3,7 @@ class UniversityModule:
     A Python class representing a university module in an academic context,
     with getters and setters to illustrate encapsulation of attributes.
 
+
     This class encapsulates three fundamental features of a university module:
         1. The module name
         2. A textual description providing an overview of the subject matter
@@ -24,6 +25,7 @@ class UniversityModule:
     ) -> None:
         """
         Initializes an instance of UniversityModule.
+
 
         Args:
             module_name (str): The official name of the module.
@@ -138,8 +140,10 @@ class UniversityModule:
         associated with the university module without direct exposure of private
         attributes.
         """
+
         print("=== University Module Information ===")
         print(f"Module Name: {self.module_name}")
         print(f"Description: {self.description}")
         print(f"Learning Outcomes: {self.learning_outcomes}")
         print("=====================================")
+
