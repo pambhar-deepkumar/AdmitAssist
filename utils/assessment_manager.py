@@ -2,8 +2,9 @@ import json
 from dataclasses import dataclass
 
 import openpyxl
-from enums import TestResult
 from openpyxl.utils.cell import range_boundaries
+
+from .enums import TestResult
 
 
 @dataclass

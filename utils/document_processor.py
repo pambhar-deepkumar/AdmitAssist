@@ -23,6 +23,7 @@ class CourseContent(BaseModel):
 
 
 def convert_pdf_documents(input_path: str, output_dir: str = "./output") -> bool:
+    print(f"Converting PDF documents from {input_path} to markdown...")
     converter = DocumentConverter()
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 

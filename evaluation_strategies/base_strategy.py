@@ -5,9 +5,8 @@ from openpyxl import Workbook
 
 
 class BaseEvaluationStrategy(ABC):
-    def __init__(self, llm_manager):
-        self.llm_manager = llm_manager
-
+    def __init__(self, name: str):
+        self.name = name
 
     @abstractmethod
     def evaluate(self, documents: Dict[str, Any]) -> Tuple[bool, Workbook]:

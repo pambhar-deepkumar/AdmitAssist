@@ -5,7 +5,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 
-
 from evaluation_strategies.all_strategies import strategy_options
 from modules.file_handler import (
     create_upload_directory,
@@ -19,7 +18,6 @@ from modules.ui_components import (
     show_download_button,
     show_processing_screen,
 )
-
 
 
 def initialize_session_state():
@@ -89,9 +87,14 @@ def main():
         st.session_state.processing_started and not st.session_state.processing_complete
     ):
         print("Processing started")
-        evaluation_report, success = show_processing_screen(
-            st.session_state.uploaded_files, processor
+        print("Saved file paths:")
+        print(st.session_state.saved_file_paths)
+        print("Uploaded files:")
+        print(st.session_state.uploaded_files)
+        success, evaluation_report = show_processing_screen(
+            st.session_state.saved_file_paths, processor
         )
+
         if success:
             report_path = os.path.join(
                 st.session_state.upload_dir, "evaluation_report.xlsx"

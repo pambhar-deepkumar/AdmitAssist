@@ -1,4 +1,5 @@
 import io
+import os
 
 import streamlit as st
 
@@ -16,18 +17,13 @@ def show_processing_screen(uploaded_files, processor):
 
     # Display uploaded files
     st.subheader("Uploaded Files")
-    for file_name, file in uploaded_files.items():
-        if file:
-            st.text(f"✓ {file_name}: {file.name}")
+    for file_name, file_path in uploaded_files.items():
+        if file_path:
+            uploaded_file_name = os.path.basename(file_path)
+            st.text(f"✓ {file_name}: {uploaded_file_name}")
 
-    # Indefinite processing indicator using spinner and status updates
     with st.spinner("Processing..."):
-        # status_text = st.empty()  # Placeholder for dynamic status updates
-
         try:
-            # What shoudl this return is file path to the saved report ok ?
-            # convert 'module_description' if pdf
-            #
             return processor.process_application(uploaded_files)
 
         except Exception as e:
