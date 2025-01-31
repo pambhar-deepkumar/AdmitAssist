@@ -1,29 +1,35 @@
+import json
 import os
 
 import openai
-from agents import CourseAssistant, EvaluationAssistant
 
-from ..utils.assessment_manager import AssessmentManager
-from ..utils.enums import TestResult
-from ..utils.markdown_parser import MarkdownLLMHelper
+from utils.assessment_manager import AssessmentManager
+from utils.enums import TestResult
+from utils.markdown_parser import MarkdownLLMHelper
+
+from .agents import CourseAssistant, EvaluationAssistant
 from .base_strategy import BaseEvaluationStrategy
 
 # from utils.markdown_parser import MarkdownLLMHelper
 
 
 class ComprehensiveStrategy(BaseEvaluationStrategy):
+    def __init__(self):
+        super().__init__("Comprehensive Strategy")
+        print("Initializing ComprehensiveStrategy")
+
     def evaluate(self, documents):
         try:
             print("Evaluating application with comprehensive strategy...")
             parser = MarkdownLLMHelper(documents["module_description"])
 
             manager = AssessmentManager(
-                "data/course_requirements/Assessment Format.json",
+                "/Users/meet/Documents/python/projects/AdmitAssist/data/course_requirements/Assessment Format.json",
                 documents["curriculum_analysis"],
             )
 
             courseAssist = CourseAssistant(parser._markdown_text)
-            evaluationAssist = EvaluationAssistant(parser._markdown_text)
+            evaluationAssist = EvaluationAssistant()
 
             for module in manager:
                 print(f"\nModule: {module.name}")
@@ -67,12 +73,18 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                             "Module Learning Outcome": module.learnOut,
                         }
 
-                        evaluationResult = self.evaluateCourse(
+                        unparsedResult = self.evaluateCourse(
                             evaluationAssist, extractedResult, required
                         )
-                        print(evaluationResult)
 
-                        if evaluationResult["judgement"]:
+                        evaluationResult = self.extract_json_by_braces(unparsedResult)
+
+                        if evaluationResult == None:
+                            matchingModule.set_evaluation(
+                                TestResult.NOT_FOUND,
+                                "No evaluation result found while parsing",
+                            )
+                        elif evaluationResult["judgement"]:
                             matchingModule.set_evaluation(
                                 TestResult.PASSED, evaluationResult["reason"]
                             )
@@ -92,11 +104,65 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                                 TestResult.NOT_FOUND, evaluationResult["reason"]
                             )
 
-                return True, manager.get_wb()
+            return True, manager.get_wb()
 
         except Exception as e:
             print(e)
             return False, None
+
+    def extract_json_by_braces(self, text):
+        """
+        Extracts the JSON substring from the first pair of matching curly braces
+        and returns it as a Python dictionary.
+
+        Parameters
+        ----------
+        text : str
+            The string containing the target JSON object.
+
+        Returns
+        -------
+        dict
+            Parsed JSON data as a Python dictionary. If no valid JSON is found,
+            returns an empty dictionary.
+
+        Notes
+        -----
+        - This function uses a stack to match the first opening curly brace '{'
+        with its corresponding closing brace '}'.
+        - If the content in between is not valid JSON, 'json.JSONDecodeError'
+        will be raised or caught.
+        """
+
+        stack = []
+        start_index = None
+        end_index = None
+
+        for i, char in enumerate(text):
+            if char == "{":
+                # If the stack is empty, mark this as the start of the JSON object.
+                if not stack:
+                    start_index = i
+                stack.append("{")
+            elif char == "}":
+                if stack:
+                    stack.pop()
+                    # If the stack is empty, we've found the matching closing brace.
+                    if not stack:
+                        end_index = i
+                        break
+
+        # If we found a matching set of braces, attempt to parse the substring as JSON.
+        if start_index is not None and end_index is not None:
+            json_str = text[start_index : end_index + 1]
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError as e:
+                print(f"Failed to parse JSON: {e}")
+                return None
+        else:
+            print("No matching curly braces that define a JSON object were found.")
+            return None
 
     def evaluateCourse(self, evaluationAssist: EvaluationAssistant, result, require):
         prompt = f"""
@@ -112,7 +178,7 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
     def extractInfoFullDocs(self, assistance, moduleName):
         return assistance.ask_question("Input: " + moduleName)
 
-    def extractInfoContent(moduleName: str, content: str) -> dict:
+    def extractInfoContent(self, moduleName: str, content: str) -> dict:
         module_description = """| Teaching   | Component                              | Rota   | Attendance   |       | Selfstudy ECTS   |
     |------------|----------------------------------------|--------|--------------|-------|------------------|
     | lecture    | Lecture: Introduction to Programming   | WiSe   | 60 h (4 SWS) | 120 h | 6 CP             |
@@ -274,6 +340,3 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
 
         except Exception as e:
             return f"An error occurred: {str(e)}"
-
-    def retrieveCourse(self, courseName):
-        pass
