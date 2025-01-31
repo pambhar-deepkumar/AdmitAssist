@@ -8,7 +8,7 @@ file_inputs:
   - name: module_description
     display_name: "Module Description"
     required: true
-    allowed_extensions: [".pdf"]
+    allowed_extensions: [".pdf", ".md"]
     description: "Upload your bachelor's degree module description"
 
   - name: essay

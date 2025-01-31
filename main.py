@@ -76,7 +76,9 @@ def main():
         if st.button("Evaluate Application"):
             if validate_required_files(uploaded_files, config):
                 st.session_state.processing_started = True
+                #
                 st.session_state.uploaded_files = uploaded_files
+                # Whats the difference here between saved_file_paths and uploaded_files?
                 st.session_state.saved_file_paths = saved_file_paths
             else:
                 st.error("Please upload all required documents.")

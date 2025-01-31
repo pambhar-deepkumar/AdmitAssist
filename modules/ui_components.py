@@ -26,6 +26,8 @@ def show_processing_screen(uploaded_files, processor):
 
         try:
             # What shoudl this return is file path to the saved report ok ?
+            # convert 'module_description' if pdf
+            #
             return processor.process_application(uploaded_files)
 
         except Exception as e:
