@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 
+
 from evaluation_strategies.all_strategies import strategy_options
 from modules.file_handler import (
     create_upload_directory,
@@ -18,6 +19,7 @@ from modules.ui_components import (
     show_download_button,
     show_processing_screen,
 )
+
 
 
 def initialize_session_state():

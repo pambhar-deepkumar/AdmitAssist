@@ -6,6 +6,7 @@ UNIVERSITÄT MÜNCHEN INSTITUT FÜR INFORMATIK
 
 ## Course Catalogue
 
+
 ## Bachelor Programme in Computer Science plus Statistics (INF-B-180-STAT)
 
 ## 180 credit points

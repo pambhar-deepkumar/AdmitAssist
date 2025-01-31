@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 
 import openpyxl
+from enums import TestResult
 from openpyxl.utils.cell import range_boundaries
 
 
@@ -23,12 +24,12 @@ class RowData:
 
     name: str
     credits: float
-    evaluation: bool = None
+    evaluation: TestResult = None
     comment: str = None
     eval_cell: str = None
     comment_cell: str = None
 
-    def set_evaluation(self, evaluation: bool, comment: str):
+    def set_evaluation(self, evaluation: TestResult, comment: str):
         self.evaluation = evaluation
         self.comment = comment
 
@@ -44,8 +45,13 @@ class ModuleData:
     Implements the __iter__ and __next__ methods to allow iteration over the rows.
     """
 
-    def __init__(self, name: str, rows: list[RowData]):
+    def __init__(
+        self, name: str, content: str, learnOut: str, maxCred: int, rows: list[RowData]
+    ):
         self.name = name
+        self.content = content
+        self.learnOut = learnOut
+        self.maxCred = maxCred
         self.rows = rows
 
     def __iter__(self):
@@ -94,8 +100,19 @@ class AssessmentManager:
             modules = section.get("Modules") or section.get("modules") or []
             for module in modules:
                 module_name = module["Course"]
+                module_content = module["Content"]
+                module_learning_outcome = module["Learning Outcome"]
+                module_max_credit = module["Minimum Credits"]
                 rows = self._create_module_rows(module)
-                self.modules.append(ModuleData(module_name, rows))
+                self.modules.append(
+                    ModuleData(
+                        module_name,
+                        module_content,
+                        module_learning_outcome,
+                        module_max_credit,
+                        rows,
+                    )
+                )
 
     def _create_module_rows(self, module):
         """
@@ -135,12 +152,18 @@ class AssessmentManager:
         for module in self.modules:
             for row in module:
                 if row.eval_cell and row.evaluation:
-                    self.ws[row.eval_cell] = row.evaluation
+                    self.ws[row.eval_cell] = row.evaluation.value
                 if row.comment_cell and row.comment:
                     self.ws[row.comment_cell] = row.comment
         self.wb.save("updated_assessment.xlsx")
 
     def get_wb(self):
+        for module in self.modules:
+            for row in module:
+                if row.eval_cell and row.evaluation:
+                    self.ws[row.eval_cell] = row.evaluation.value
+                if row.comment_cell and row.comment:
+                    self.ws[row.comment_cell] = row.comment
         return self.wb
 
     def __iter__(self):
