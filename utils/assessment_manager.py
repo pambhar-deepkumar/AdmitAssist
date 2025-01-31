@@ -158,6 +158,12 @@ class AssessmentManager:
         self.wb.save("updated_assessment.xlsx")
 
     def get_wb(self):
+        for module in self.modules:
+            for row in module:
+                if row.eval_cell and row.evaluation:
+                    self.ws[row.eval_cell] = row.evaluation.value
+                if row.comment_cell and row.comment:
+                    self.ws[row.comment_cell] = row.comment
         return self.wb
 
     def __iter__(self):
