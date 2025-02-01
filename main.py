@@ -36,6 +36,16 @@ def initialize_session_state():
         st.session_state.saved_file_paths = {}
 
 
+def reset_session_state():
+    """Reset session state variables to initial state"""
+    st.session_state.processing_started = False
+    st.session_state.processing_complete = False
+    st.session_state.uploaded_files = None
+    st.session_state.evaluation_report = None
+    st.session_state.upload_dir = None
+    st.session_state.saved_file_paths = {}
+
+
 def main():
     st.title("Application Evaluation System")
 
@@ -73,24 +83,26 @@ def main():
                 )
                 saved_file_paths[file_config["name"]] = saved_path
 
-        if st.button("Evaluate Application"):
+        col1, col2 = st.columns(2)
+
+        # Evaluate button triggers processing
+        if col1.button("Evaluate Application"):
             if validate_required_files(uploaded_files, config):
                 st.session_state.processing_started = True
-                #
                 st.session_state.uploaded_files = uploaded_files
-                # Whats the difference here between saved_file_paths and uploaded_files?
                 st.session_state.saved_file_paths = saved_file_paths
+                st.rerun()  # Force rerun to proceed to the processing step
             else:
                 st.error("Please upload all required documents.")
+
+        # Retry button to reset state
+        if col2.button("Retry"):
+            reset_session_state()
+            st.rerun()
 
     elif (
         st.session_state.processing_started and not st.session_state.processing_complete
     ):
-        print("Processing started")
-        print("Saved file paths:")
-        print(st.session_state.saved_file_paths)
-        print("Uploaded files:")
-        print(st.session_state.uploaded_files)
         success, evaluation_report = show_processing_screen(
             st.session_state.saved_file_paths, processor
         )
@@ -103,18 +115,13 @@ def main():
 
             st.session_state.processing_complete = True
             st.session_state.evaluation_report = evaluation_report
-            st.rerun()
+            st.rerun()  # Rerun to show the download button screen
 
     elif st.session_state.processing_complete:
         show_download_button(st.session_state.evaluation_report)
 
         if st.button("Evaluate Another Application"):
-            st.session_state.processing_started = False
-            st.session_state.processing_complete = False
-            st.session_state.uploaded_files = None
-            st.session_state.evaluation_report = None
-            st.session_state.upload_dir = None
-            st.session_state.saved_file_paths = {}
+            reset_session_state()
             st.rerun()
 
 
