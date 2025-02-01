@@ -21,7 +21,6 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
         try:
             print("Evaluating application with comprehensive strategy...")
             parser = MarkdownLLMHelper(documents["module_description"])
-            st.text("Initializing the parsers")
             manager = AssessmentManager(
                 r"data/course_requirements/Assessment Format.json",
                 documents["curriculum_analysis"],
@@ -29,86 +28,112 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
 
             courseAssist = CourseAssistant(parser._markdown_text)
             evaluationAssist = EvaluationAssistant()
-            st.text("Iterating over the modules")
             for module in manager:
-                st.text(f"Processing Module: {module.name}")
-                print(f"\nModule: {module.name}")
-                for matchingModule in module:
-                    st.text(f"Retrieving information for {matchingModule.name}")
-                    if matchingModule.name:
-                        print(f"Searching for the {matchingModule.name}\n")
+                eval_one_module = False
+                with st.status(
+                    f"Processing Module: {module.name}", expanded=True
+                ) as status:
+                    for matchingModule in module:
+                        st.text(f"> Retrieving information for {matchingModule.name}")
+                        if matchingModule.name:
+                            if not eval_one_module:
+                                eval_one_module = True
+                            print(
+                                f"Searching for the {matchingModule.name} in module description"
+                            )
 
-                        # Fuzzly searches only in the headers
-                        results = parser.fuzzy_match_heading_and_retrieve_lines(
-                            keyword=matchingModule.name,
-                            num_lines=100,
-                            ratio_threshold=0.7,
-                        )
-                        if not results:
-                            # Matching exact sequence over all document and return 150 lines after search
-                            results = parser.fuzzy_search_with_lines(
+                            # Fuzzly searches only in the headers
+                            results = parser.fuzzy_match_heading_and_retrieve_lines(
                                 keyword=matchingModule.name,
-                                num_lines=150,
-                                ratio_threshold=1,
+                                num_lines=100,
+                                ratio_threshold=0.7,
                             )
                             if not results:
-                                # pass full document and course name for extraction
-                                extractedResult = self.extractInfoFullDocs(
-                                    assistance=courseAssist,
-                                    moduleName=matchingModule.name,
+                                # Matching exact sequence over all document and return 150 lines after search
+                                results = parser.fuzzy_search_with_lines(
+                                    keyword=matchingModule.name,
+                                    num_lines=150,
+                                    ratio_threshold=1,
                                 )
+                                if not results:
+                                    # pass full document and course name for extraction
+                                    extractedResult = self.extractInfoFullDocs(
+                                        assistance=courseAssist,
+                                        moduleName=matchingModule.name,
+                                    )
+                                else:
+                                    extractedResult = self.extractInfoContent(
+                                        moduleName=matchingModule.name,
+                                        content=results["content"],
+                                    )
                             else:
                                 extractedResult = self.extractInfoContent(
                                     moduleName=matchingModule.name,
                                     content=results["content"],
                                 )
-                        else:
-                            extractedResult = self.extractInfoContent(
-                                moduleName=matchingModule.name,
-                                content=results["content"],
+
+                            required = {
+                                "Module Name": module.name,
+                                "Module Content": module.content,
+                                "Module Learning Outcome": module.learnOut,
+                            }
+
+                            st.text(
+                                "> Matching the extracted information with the required information"
+                            )
+                            unparsedResult = self.evaluateCourse(
+                                evaluationAssist, extractedResult, required
                             )
 
-                        required = {
-                            "Module Name": module.name,
-                            "Module Content": module.content,
-                            "Module Learning Outcome": module.learnOut,
-                        }
+                            evaluationResult = self.extract_json_by_braces(
+                                unparsedResult
+                            )
 
-                        st.text(
-                            "Matching the extracted information with the required information"
+                            if evaluationResult == None:
+                                matchingModule.set_evaluation(
+                                    TestResult.NOT_FOUND,
+                                    "> No evaluation result found while parsing",
+                                )
+                            elif evaluationResult["judgement"]:
+                                st.success(
+                                    f"> Module {matchingModule.name} evaluation passed.\n Feedback: {evaluationResult['reason']}"
+                                )
+                                matchingModule.set_evaluation(
+                                    TestResult.PASSED, evaluationResult["reason"]
+                                )
+                            elif ~evaluationResult["judgement"]:
+                                st.error(
+                                    f"> Module {matchingModule.name} evaluation failed.\n Feedback: {evaluationResult['reason']}"
+                                )
+                                matchingModule.set_evaluation(
+                                    TestResult.NOT_PASSED, evaluationResult["reason"]
+                                )
+
+                            elif (
+                                evaluationResult["judgement"] == "NULL"
+                                or evaluationResult["judgement"] == None
+                            ):
+                                st.warning(
+                                    f"> Module {matchingModule.name} evaluation not found."
+                                )
+                                matchingModule.set_evaluation(
+                                    TestResult.NOT_FOUND, evaluationResult["reason"]
+                                )
+                            else:
+                                st.warning(
+                                    f"> Module {matchingModule.name} evaluation not found."
+                                )
+                                matchingModule.set_evaluation(
+                                    TestResult.NOT_FOUND, evaluationResult["reason"]
+                                )
+
+                    if not eval_one_module:
+                        st.error(
+                            f"No incoming modules for module {module.name} in curriculum anlysis. Please try again."
                         )
-                        unparsedResult = self.evaluateCourse(
-                            evaluationAssist, extractedResult, required
-                        )
-
-                        evaluationResult = self.extract_json_by_braces(unparsedResult)
-
-                        if evaluationResult == None:
-                            matchingModule.set_evaluation(
-                                TestResult.NOT_FOUND,
-                                "No evaluation result found while parsing",
-                            )
-                        elif evaluationResult["judgement"]:
-                            matchingModule.set_evaluation(
-                                TestResult.PASSED, evaluationResult["reason"]
-                            )
-                        elif ~evaluationResult["judgement"]:
-                            matchingModule.set_evaluation(
-                                TestResult.NOT_PASSED, evaluationResult["reason"]
-                            )
-                        elif (
-                            evaluationResult["judgement"] == "NULL"
-                            or evaluationResult["judgement"] == None
-                        ):
-                            matchingModule.set_evaluation(
-                                TestResult.NOT_FOUND, evaluationResult["reason"]
-                            )
-                        else:
-                            matchingModule.set_evaluation(
-                                TestResult.NOT_FOUND, evaluationResult["reason"]
-                            )
-
-                        st.text("Setting the evaluation result for the module")
+                    status.update(
+                        label=f"Module {module.name} evaluation.", expanded=False
+                    )
 
             return True, manager.get_wb()
 

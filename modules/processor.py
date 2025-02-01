@@ -20,6 +20,7 @@ class ApplicationProcessor:
         return strategies[strategy_type]
 
     def process_application(self, uploaded_files) -> Tuple[bool, Workbook]:
+        st.subheader("Documents Processing:")
         with st.status("Processing module description file..."):
             module_description = uploaded_files.get("module_description")
             st.text("Checking if module description is a PDF file...")
@@ -29,23 +30,22 @@ class ApplicationProcessor:
                     st.text("Converting module description to markdown...")
                     dir_path = os.path.dirname(module_description)
                     path_to_md_file = convert_pdf_documents(dir_path)
-                    # Maybe add a happy emoji icon below
                     st.info("Module description converted to markdown.")
                     uploaded_files["module_description"] = path_to_md_file
                 except Exception as e:
-                    # Maybe add a sad emoji icon below
                     st.error(
                         "An error occurred during conversion for pdf to markdown. Please try again."
                     )
                     st.exception(e)
                     return False, None
+            else:
+                st.text("Module description is not a PDF file. No conversion needed.")
 
-        with st.status("Starting evaluation process..."):
-            try:
-                thisstrategy = ComprehensiveStrategy()
-                st.text(f"Using {thisstrategy.name} strategy")
-                return thisstrategy.evaluate(uploaded_files)
-            except Exception as e:
-                st.error(f"An error occurred during processing.")
-                st.exception(e)
-                return False, None
+        st.subheader("Module Evaluation:")
+        try:
+            thisstrategy = ComprehensiveStrategy()
+            return thisstrategy.evaluate(uploaded_files)
+        except Exception as e:
+            st.error(f"An error occurred during processing.")
+            st.exception(e)
+            return False, None

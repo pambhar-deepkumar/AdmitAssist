@@ -21,7 +21,7 @@ from modules.ui_components import (
 
 
 def initialize_session_state():
-    """Initialize session state variables if they don't exist"""
+    """Initialize session state variables if they don't exist."""
     if "processing_started" not in st.session_state:
         st.session_state.processing_started = False
     if "processing_complete" not in st.session_state:
@@ -37,7 +37,7 @@ def initialize_session_state():
 
 
 def reset_session_state():
-    """Reset session state variables to initial state"""
+    """Reset session state variables to initial state."""
     st.session_state.processing_started = False
     st.session_state.processing_complete = False
     st.session_state.uploaded_files = None
@@ -47,33 +47,32 @@ def reset_session_state():
 
 
 def main():
-    st.title("Application Evaluation System")
+    st.title("Admit Assist")
 
-    # Initialize session state
     initialize_session_state()
 
-    # Load configuration
     config = load_config()
 
+    st.sidebar.header("Evaluation Options")
     selected_strategy = st.sidebar.selectbox(
-        "Select Evaluation Strategy", options=list(strategy_options.keys()), index=0
+        "Select Evaluation Strategy",
+        options=list(strategy_options.keys()),
+        index=0,
+        help="Choose the strategy that fits your application scenario.",
     )
-
-    # Display strategy information
-    st.sidebar.write(f"Using: {selected_strategy} Strategy")
-
-    # Initialize processor with selected strategy
+    st.sidebar.info(f"Strategy in use: {selected_strategy}")
     processor = ApplicationProcessor(strategy_options[selected_strategy])
 
-    # File upload section
     if not st.session_state.processing_started:
-        # Create new upload directory for this session if not exists
+        st.subheader("Upload Your Application Files")
+
         if st.session_state.upload_dir is None:
             st.session_state.upload_dir = create_upload_directory()
 
         uploaded_files = {}
         saved_file_paths = {}
 
+        # Create file uploader for each required file input defined in config
         for file_config in config["file_inputs"]:
             uploaded_file = create_file_uploader(file_config)
             uploaded_files[file_config["name"]] = uploaded_file
@@ -83,26 +82,25 @@ def main():
                 )
                 saved_file_paths[file_config["name"]] = saved_path
 
-        col1, col2 = st.columns(2)
+        st.divider()
 
-        # Evaluate button triggers processing
-        if col1.button("Evaluate Application"):
+        if st.button(
+            "Evaluate Application", help="Click to start evaluating your application"
+        ):
             if validate_required_files(uploaded_files, config):
                 st.session_state.processing_started = True
                 st.session_state.uploaded_files = uploaded_files
                 st.session_state.saved_file_paths = saved_file_paths
-                st.rerun()  # Force rerun to proceed to the processing step
+                st.rerun()
             else:
-                st.error("Please upload all required documents.")
-
-        # Retry button to reset state
-        if col2.button("Retry"):
-            reset_session_state()
-            st.rerun()
+                st.error(
+                    "Missing required files. Please ensure all required documents are uploaded."
+                )
 
     elif (
         st.session_state.processing_started and not st.session_state.processing_complete
     ):
+        # Processing screen with visual spinner and clear headings
         success, evaluation_report = show_processing_screen(
             st.session_state.saved_file_paths, processor
         )
@@ -115,14 +113,15 @@ def main():
 
             st.session_state.processing_complete = True
             st.session_state.evaluation_report = evaluation_report
-            st.rerun()  # Rerun to show the download button screen
+            # Provide download button for the completed evaluation report
+            show_download_button(st.session_state.evaluation_report)
 
-    elif st.session_state.processing_complete:
-        show_download_button(st.session_state.evaluation_report)
-
-        if st.button("Evaluate Another Application"):
-            reset_session_state()
-            st.rerun()
+            # Button to process another application
+            if st.button(
+                "Evaluate Another Application", help="Reset and start a new evaluation"
+            ):
+                reset_session_state()
+                st.rerun()
 
 
 if __name__ == "__main__":
