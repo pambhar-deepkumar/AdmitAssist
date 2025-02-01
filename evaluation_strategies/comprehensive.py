@@ -42,34 +42,43 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                                 f"Searching for the {matchingModule.name} in module description"
                             )
 
-                            # Fuzzly searches only in the headers
-                            results = parser.fuzzy_match_heading_and_retrieve_lines(
+                        # Fuzzly searches only in the headers
+                        results = parser.fuzzy_match_heading_and_retrieve_lines(
+                            keyword=matchingModule.name,
+                            num_lines=100,
+                            ratio_threshold=0.7,
+                        )
+                        if not results:
+                            # Matching exact sequence over all document and return 150 lines after search
+                            results = parser.fuzzy_search_with_lines(
                                 keyword=matchingModule.name,
-                                num_lines=100,
-                                ratio_threshold=0.7,
+                                num_lines=150,
+                                ratio_threshold=1,
                             )
                             if not results:
-                                # Matching exact sequence over all document and return 150 lines after search
-                                results = parser.fuzzy_search_with_lines(
-                                    keyword=matchingModule.name,
-                                    num_lines=150,
-                                    ratio_threshold=1,
+                                # pass full document and course name for extraction
+                                extractedResult = self.extractInfoFullDocs(
+                                    assistance=courseAssist,
+                                    moduleName=matchingModule.name,
                                 )
-                                if not results:
-                                    # pass full document and course name for extraction
-                                    extractedResult = self.extractInfoFullDocs(
-                                        assistance=courseAssist,
-                                        moduleName=matchingModule.name,
-                                    )
-                                else:
-                                    extractedResult = self.extractInfoContent(
-                                        moduleName=matchingModule.name,
-                                        content=results["content"],
-                                    )
                             else:
                                 extractedResult = self.extractInfoContent(
                                     moduleName=matchingModule.name,
                                     content=results["content"],
+                                )
+                        else:
+                            extractedResult = self.extractInfoContent(
+                                moduleName=matchingModule.name,
+                                content=results["content"],
+                            )
+                            result = self.extract_json_by_braces(extractedResult)
+                            if (
+                                result["course_name"] == "null"
+                                or result["course_name"] == None
+                            ):
+                                extractedResult = self.extractInfoFullDocs(
+                                    assistance=courseAssist,
+                                    moduleName=matchingModule.name,
                                 )
 
                             required = {
@@ -318,12 +327,14 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
         prompt = f"""You are analyzing a course module from a university's course catalog. You will be provide an input which is name of the course/module. It can be incomplete or half or missing module codes something and Your task is to retrieve the exact full name of the course with their codes,exact course description/content/syllabus and exact Learning Outcome/Qualification Aim/Aim from the given text. If you do not found that you have to produce None as ouput.
         Here is the format of the conversation:
         Input: Course name
+        Content: Content from which you have to search
         Output format: JSON
         Output:
+        {{
             "course_name": "String",
             "description": "String",
             "learning_outcomes": "String"
-
+        }}
         Here is an Example for you:
         Input :  P1: Introduction to Programming (INF-EiP)
         Content :{module_description}
