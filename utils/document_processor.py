@@ -2,12 +2,6 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from docling.document_converter import DocumentConverter
-from langchain_community.document_loaders import UnstructuredMarkdownLoader
-from langchain_core.documents import Document
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pydantic import BaseModel, Field
 
 
@@ -23,6 +17,34 @@ class CourseContent(BaseModel):
 
 
 def convert_pdf_documents(input_path: str, output_dir: str = "./output") -> bool:
+    """
+    Converts PDF documents to Markdown format using the `DocumentConverter` class.
+
+    This function processes either a single PDF file or all PDF files in a directory.
+    The converted Markdown files are saved in the specified output directory.
+
+    Args:
+        input_path (str): The path to a single PDF file or a directory containing PDF files.
+                          If a directory is provided, all `.pdf` files in that directory will be processed.
+        output_dir (str): The directory where converted Markdown files will be saved.
+                          Defaults to "./output".
+
+    Returns:
+        bool:
+            - If processing a single file, returns `True` if conversion was successful or `False` if it failed.
+            - If processing a directory, returns `True` if at least one file was successfully converted,
+              or `False` if no files were converted.
+
+    Raises:
+        Exception: If an error occurs during the conversion process for any file.
+
+    Example:
+        # Convert a single PDF file
+        convert_pdf_documents("example.pdf", "./markdown_output")
+
+        # Convert all PDF files in a directory
+        convert_pdf_documents("./pdf_directory", "./markdown_output")
+    """
     print(f"Converting PDF documents from {input_path} to markdown...")
     converter = DocumentConverter()
     Path(output_dir).mkdir(parents=True, exist_ok=True)

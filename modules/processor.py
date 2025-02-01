@@ -32,8 +32,7 @@ class ApplicationProcessor:
         try:
             print("Evaluating application...")
             # Print the name of the class of the strategy
-            print("Strategy class:", self.strategy.__init__())
-            strategy = ComprehensiveStrategy()
-            return strategy.evaluate(uploaded_files)
+            thisstrategy = ComprehensiveStrategy()
+            return thisstrategy.evaluate(uploaded_files)
         except Exception as e:
             return False, f"Evaluation failed: {str(e)}"

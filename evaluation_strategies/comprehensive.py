@@ -24,7 +24,7 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
             parser = MarkdownLLMHelper(documents["module_description"])
 
             manager = AssessmentManager(
-                "/Users/meet/Documents/python/projects/AdmitAssist/data/course_requirements/Assessment Format.json",
+                r"data/course_requirements/Assessment Format.json",
                 documents["curriculum_analysis"],
             )
 
@@ -337,6 +337,5 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                 return {"response": "None"}
             else:
                 return assistanceResponse
-
         except Exception as e:
             return f"An error occurred: {str(e)}"
