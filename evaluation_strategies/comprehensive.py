@@ -2,6 +2,7 @@ import json
 import os
 
 import openai
+import streamlit as st
 
 from utils.assessment_manager import AssessmentManager
 from utils.enums import TestResult
@@ -9,8 +10,6 @@ from utils.markdown_parser import MarkdownLLMHelper
 
 from .agents import CourseAssistant, EvaluationAssistant
 from .base_strategy import BaseEvaluationStrategy
-
-# from utils.markdown_parser import MarkdownLLMHelper
 
 
 class ComprehensiveStrategy(BaseEvaluationStrategy):
@@ -22,18 +21,20 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
         try:
             print("Evaluating application with comprehensive strategy...")
             parser = MarkdownLLMHelper(documents["module_description"])
-
+            st.text("Initializing the parsers")
             manager = AssessmentManager(
-                "/Users/meet/Documents/python/projects/AdmitAssist/data/course_requirements/Assessment Format.json",
+                r"data/course_requirements/Assessment Format.json",
                 documents["curriculum_analysis"],
             )
 
             courseAssist = CourseAssistant(parser._markdown_text)
             evaluationAssist = EvaluationAssistant()
-
+            st.text("Iterating over the modules")
             for module in manager:
+                st.text(f"Processing Module: {module.name}")
                 print(f"\nModule: {module.name}")
                 for matchingModule in module:
+                    st.text(f"Retrieving information for {matchingModule.name}")
                     if matchingModule.name:
                         print(f"Searching for the {matchingModule.name}\n")
 
@@ -82,6 +83,9 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                             "Module Learning Outcome": module.learnOut,
                         }
 
+                        st.text(
+                            "Matching the extracted information with the required information"
+                        )
                         unparsedResult = self.evaluateCourse(
                             evaluationAssist, extractedResult, required
                         )
@@ -113,10 +117,15 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                                 TestResult.NOT_FOUND, evaluationResult["reason"]
                             )
 
+                        st.text("Setting the evaluation result for the module")
+
             return True, manager.get_wb()
 
         except Exception as e:
-            print(e)
+            st.error(
+                f"An error occurred during evaluating module:{module}. Please try again."
+            )
+            st.exception(e)
             return False, None
 
     def extract_json_by_braces(self, text):
@@ -348,6 +357,5 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                 return {"response": "None"}
             else:
                 return assistanceResponse
-
         except Exception as e:
             return f"An error occurred: {str(e)}"

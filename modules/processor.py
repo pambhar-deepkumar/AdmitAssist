@@ -1,6 +1,7 @@
 import os
 from typing import Tuple
 
+import streamlit as st
 from openpyxl import Workbook
 
 from evaluation_strategies.all_strategies import strategies
@@ -19,20 +20,32 @@ class ApplicationProcessor:
         return strategies[strategy_type]
 
     def process_application(self, uploaded_files) -> Tuple[bool, Workbook]:
-        print("Processing application...")
-        print("self.strategy", self.strategy)
+        with st.status("Processing module description file..."):
+            module_description = uploaded_files.get("module_description")
+            st.text("Checking if module description is a PDF file...")
+            if module_description.lower().endswith(".pdf"):
+                try:
+                    st.text("Module description is a PDF file.")
+                    st.text("Converting module description to markdown...")
+                    dir_path = os.path.dirname(module_description)
+                    path_to_md_file = convert_pdf_documents(dir_path)
+                    # Maybe add a happy emoji icon below
+                    st.info("Module description converted to markdown.")
+                    uploaded_files["module_description"] = path_to_md_file
+                except Exception as e:
+                    # Maybe add a sad emoji icon below
+                    st.error(
+                        "An error occurred during conversion for pdf to markdown. Please try again."
+                    )
+                    st.exception(e)
+                    return False, None
 
-        module_description = uploaded_files.get("module_description")
-
-        if module_description.lower().endswith(".pdf"):
-            print("Converting module description to markdown...")
-            dir_path = os.path.dirname(module_description)
-            path_to_md_file = convert_pdf_documents(dir_path)
-            uploaded_files["module_description"] = path_to_md_file
-        try:
-            print("Evaluating application...")
-            # Print the name of the class of the strategy
-            thisstrategy = ComprehensiveStrategy()
-            return thisstrategy.evaluate(uploaded_files)
-        except Exception as e:
-            return False, f"Evaluation failed: {str(e)}"
+        with st.status("Starting evaluation process..."):
+            try:
+                thisstrategy = ComprehensiveStrategy()
+                st.text(f"Using {thisstrategy.name} strategy")
+                return thisstrategy.evaluate(uploaded_files)
+            except Exception as e:
+                st.error(f"An error occurred during processing.")
+                st.exception(e)
+                return False, None

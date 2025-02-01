@@ -3,6 +3,8 @@ import os
 
 import streamlit as st
 
+from .test_ui import sample_animation
+
 
 def create_file_uploader(file_config):
     return st.file_uploader(
@@ -13,17 +15,19 @@ def create_file_uploader(file_config):
 
 
 def show_processing_screen(uploaded_files, processor):
-    st.header("Processing Application")
+    st.header("Application Processing")
 
-    # Display uploaded files
-    st.subheader("Uploaded Files")
+    st.subheader("Uploaded Files:")
     for file_name, file_path in uploaded_files.items():
         if file_path:
             uploaded_file_name = os.path.basename(file_path)
             st.text(f"✓ {file_name}: {uploaded_file_name}")
 
-    with st.spinner("Processing..."):
+    st.divider()
+
+    with st.spinner("Please wait while your application is being processed..."):
         try:
+            st.text("Processing starting...")
             return processor.process_application(uploaded_files)
 
         except Exception as e:
