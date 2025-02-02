@@ -85,7 +85,7 @@ class EvaluationAssistant:
 
                 OUTPUT:
                 {{
-                    "judgement": TRUE/FALSE,
+                    "judgement": true/false,
                     "confidence" : Generate a score how confident you are (0-100),
                     "reason" : Generate a reason not more than 100 words,
 
@@ -94,9 +94,9 @@ class EvaluationAssistant:
                 If one of course description is null or If you are not able to make a judgement then please produce following output with suitable reason
                 OUTPUT:
                 {{
-                    "Judgement": NULL,
-                    "Confidence" : NULL,
-                    "Reason" :  Generate a reason not more than 100 words,
+                    "judgement": null,
+                    "confidence" : null,
+                    "reason" :  Generate a reason not more than 100 words,
 
                 }}
 

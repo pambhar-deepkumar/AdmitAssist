@@ -81,60 +81,63 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
                                     moduleName=matchingModule.name,
                                 )
 
-                            required = {
-                                "Module Name": module.name,
-                                "Module Content": module.content,
-                                "Module Learning Outcome": module.learnOut,
-                            }
-
-                            st.text(
-                                "> Matching the extracted information with the required information"
+                        required = {
+                            "Module Name": module.name,
+                            "Module Content": module.content,
+                            "Module Learning Outcome": module.learnOut,
+                        }
+                        st.text(
+                            "> Matching the extracted information with the required information"
+                        )
+                        unparsedResult = self.evaluateCourse(
+                            evaluationAssist, extractedResult, required
+                        )
+                        evaluationResult = self.extract_json_by_braces(unparsedResult)
+                        if evaluationResult == None or evaluationResult == "null":
+                            matchingModule.set_evaluation(
+                                TestResult.NOT_FOUND,
+                                "> No evaluation result found while parsing",
                             )
-                            unparsedResult = self.evaluateCourse(
-                                evaluationAssist, extractedResult, required
+                        elif (
+                            evaluationResult["judgement"] == "null"
+                            or evaluationResult["judgement"] == None
+                            or evaluationResult["judgement"] == "Null"
+                        ):
+                            st.warning(
+                                f"> Module {matchingModule.name} evaluation not found."
                             )
-
-                            evaluationResult = self.extract_json_by_braces(
-                                unparsedResult
+                            matchingModule.set_evaluation(
+                                TestResult.NOT_FOUND, evaluationResult["reason"]
                             )
-
-                            if evaluationResult == None:
-                                matchingModule.set_evaluation(
-                                    TestResult.NOT_FOUND,
-                                    "> No evaluation result found while parsing",
-                                )
-                            elif evaluationResult["judgement"]:
-                                st.success(
-                                    f"> Module {matchingModule.name} evaluation passed.\n Feedback: {evaluationResult['reason']}"
-                                )
-                                matchingModule.set_evaluation(
-                                    TestResult.PASSED, evaluationResult["reason"]
-                                )
-                            elif ~evaluationResult["judgement"]:
-                                st.error(
-                                    f"> Module {matchingModule.name} evaluation failed.\n Feedback: {evaluationResult['reason']}"
-                                )
-                                matchingModule.set_evaluation(
-                                    TestResult.NOT_PASSED, evaluationResult["reason"]
-                                )
-
-                            elif (
-                                evaluationResult["judgement"] == "NULL"
-                                or evaluationResult["judgement"] == None
-                            ):
-                                st.warning(
-                                    f"> Module {matchingModule.name} evaluation not found."
-                                )
-                                matchingModule.set_evaluation(
-                                    TestResult.NOT_FOUND, evaluationResult["reason"]
-                                )
-                            else:
-                                st.warning(
-                                    f"> Module {matchingModule.name} evaluation not found."
-                                )
-                                matchingModule.set_evaluation(
-                                    TestResult.NOT_FOUND, evaluationResult["reason"]
-                                )
+                        elif (
+                            evaluationResult["judgement"] == True
+                            or evaluationResult["judgement"] == "True"
+                            or evaluationResult["judgement"] == "true"
+                        ):
+                            st.success(
+                                f"> Module {matchingModule.name} evaluation passed.\n Feedback: {evaluationResult['reason']}"
+                            )
+                            matchingModule.set_evaluation(
+                                TestResult.PASSED, evaluationResult["reason"]
+                            )
+                        elif (
+                            ~evaluationResult["judgement"]
+                            or evaluationResult["judgement"] == "False"
+                            or evaluationResult["judgement"] == "false"
+                        ):
+                            st.error(
+                                f"> Module {matchingModule.name} evaluation failed.\n Feedback: {evaluationResult['reason']}"
+                            )
+                            matchingModule.set_evaluation(
+                                TestResult.NOT_PASSED, evaluationResult["reason"]
+                            )
+                        else:
+                            st.warning(
+                                f"> Module {matchingModule.name} evaluation not found."
+                            )
+                            matchingModule.set_evaluation(
+                                TestResult.NOT_FOUND, evaluationResult["reason"]
+                            )
 
                     if not eval_one_module:
                         st.error(
@@ -198,6 +201,7 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
         # If we found a matching set of braces, attempt to parse the substring as JSON.
         if start_index is not None and end_index is not None:
             json_str = text[start_index : end_index + 1]
+
             try:
                 return json.loads(json_str)
             except json.JSONDecodeError as e:
