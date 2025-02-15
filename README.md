@@ -93,6 +93,7 @@ Below is an embedded demo video showcasing the app in action:
   Your browser does not support the video tag.
 </video>
 
+If the video does not appear please click [here](demo/demo.mp4)
 ## Frequently Asked Questions (FAQs)
 
 - **What example data can I use?**  
