@@ -1,308 +1,126 @@
 
-# Application Evaluation SystemP
-- [Application Evaluation SystemP](#application-evaluation-systemp)
-  - [System Overview](#system-overview)
-    - [Key Components](#key-components)
-      - [1. File Management (`modules/file_handler.py`)](#1-file-management-modulesfile_handlerpy)
-      - [2. UI Components (`modules/ui_components.py`)](#2-ui-components-modulesui_componentspy)
-      - [3. Evaluation Strategies (`evaluation_strategies/`)](#3-evaluation-strategies-evaluation_strategies)
-      - [4. LLM Management (`utils/llm_manager.py`)](#4-llm-management-utilsllm_managerpy)
-      - [5. Document Processing (`utils/document_processor.py`)](#5-document-processing-utilsdocument_processorpy)
-  - [Features](#features)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-    - [Option 1: Using pip and venv](#option-1-using-pip-and-venv)
-    - [Option 2: Using Conda](#option-2-using-conda)
-  - [Configuration](#configuration)
-    - [1. Environment Setup](#1-environment-setup)
-    - [2. File Upload Configuration](#2-file-upload-configuration)
-    - [3. LLM Configuration](#3-llm-configuration)
-  - [Running the Application](#running-the-application)
-  - [Project Structure](#project-structure)
-  - [Adding New Features](#adding-new-features)
-    - [New Evaluation Strategy](#new-evaluation-strategy)
-    - [New Document Type](#new-document-type)
-  - [Testing](#testing)
-  - [Contributing](#contributing)
-  - [Development Setup](#development-setup)
-    - [Prerequisites](#prerequisites-1)
-    - [Setting up the development environment](#setting-up-the-development-environment)
-    - [Pre-commit hooks](#pre-commit-hooks)
-    - [Code Style](#code-style)
 
-
+# AdmitAssist
 
 A Streamlit-based application for evaluating academic applications using AI-powered analysis and automated processing.
 
-## System Overview
+- [AdmitAssist](#admitassist)
+  - [Setup Instructions](#setup-instructions)
+    - [Overview](#overview)
+    - [Setup Files](#setup-files)
+      - [Installation Commands](#installation-commands)
+    - [Secrets Configuration](#secrets-configuration)
+  - [Demo Video](#demo-video)
+  - [Frequently Asked Questions (FAQs)](#frequently-asked-questions-faqs)
+  - [Troubleshooting Common Setup Issues](#troubleshooting-common-setup-issues)
 
-### Key Components
+## Setup Instructions
 
-#### 1. File Management (`modules/file_handler.py`)
-- Handles document uploads and validation
-- Configurable through upload_config.yaml
-- Acts as the initial validation layer
+### Overview
+- **Data Examples:**  
+  The **data** folder contains several examples on which the app was tested. You can use these examples for your own experiments.
 
-#### 2. UI Components (`modules/ui_components.py`)
-- Manages Streamlit interface
-- Handles user interactions
-- Displays progress and results
+- **PDF Uploads:**  
+  Uploading PDF files is supported. However, converting them with Docling may take some time—especially on PCs without GPUs. If conversion is slow, use the pre-converted PDFs found in the examples folder.
 
-#### 3. Evaluation Strategies (`evaluation_strategies/`)
-Different approaches for application evaluation:
-- Academic Focus Strategy
-- Research Potential Strategy
-- Comprehensive Evaluation Strategy
+### Setup Files
 
-#### 4. LLM Management (`utils/llm_manager.py`)
-- Manages AI model usage
-- Optimizes model selection based on tasks
-- Cost-effective resource utilization
+The repository provides two types of setup files for each operating system:
 
-#### 5. Document Processing (`utils/document_processor.py`)
-- Extracts information from documents
-- Prepares data for evaluation
-- Handles different document formats
+- **Linux/Mac:**  
+  Provided as `.sh` files.
 
-## Features
-- Multiple evaluation strategies
-- Smart AI model utilization
-- Progress tracking
-- Automated report generation
-- Modular architecture
+- **Windows:**  
+  Provided as `.bat` files.
 
-## Prerequisites
-- Python 3.8 or higher
-- Git
-- OpenAI API key
+There are two setup scripts:
 
-## Installation
+- **setup:**  
+  Sets up the basic virtual environment and installs all necessary dependencies.
+  
+- **setup_dev:**  
+  Performs all actions of **setup** and, additionally, configures the development environment; this includes installing pre-commit hooks, linters, and formatters.
 
-### Option 1: Using pip and venv
+**Which script to use:**
 
-1. Clone the repository:
+- Use **setup** if you only intend to run the application.
+- Use **setup_dev** if you plan to modify the code or contribute to development.
+
+#### Installation Commands
+
+**For Linux/Mac:**
+
+*Basic setup:*
 ```bash
-git clone https://github.com/yourusername/application-evaluation-system.git
-cd application-evaluation-system
+chmod +x setup.sh
+./setup.sh
 ```
 
-2. Create and activate virtual environment:
-
-Windows:
+*Development setup:*
 ```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-macOS/Linux:
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-3. Install requirements:
-```bash
-pip install -r requirements.txt
-```
-
-### Option 2: Using Conda
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/application-evaluation-system.git
-cd application-evaluation-system
-```
-
-2. Create and activate conda environment:
-```bash
-conda create -n app_eval python=3.8
-conda activate app_eval
-```
-
-3. Install requirements:
-```bash
-pip install -r requirements.txt
-```
-
-## Configuration
-
-### 1. Environment Setup
-Create a `.env` file:
-```env
-OPENAI_API_KEY=your_api_key_here
-```
-
-### 2. File Upload Configuration
-In `config/upload_config.yaml`:
-```yaml
-file_inputs:
-  - name: curriculum_analysis
-    display_name: "Curriculum Analysis"
-    required: true
-    allowed_extensions: [".xlsx", ".xls"]
-```
-
-### 3. LLM Configuration
-In `config/llm_config.yaml`:
-```yaml
-models:
-  gpt4:
-    name: "gpt-4"
-    use_for: ["final_evaluation"]
-  gpt3_5:
-    name: "gpt-3.5-turbo"
-    use_for: ["initial_screening"]
-```
-
-## Running the Application
-
-1. Activate your environment:
-```bash
-# venv
-source venv/bin/activate  # Unix
-venv\Scripts\activate     # Windows
-
-# or conda
-conda activate app_eval
-```
-
-2. Start the application:
-```bash
-cd app
-streamlit run app/main.py
-```
-
-3. Access at `http://localhost:8501`
-
-## Project Structure
-```
-application_evaluation_system/
-├── app/
-│   ├── main.py                    # Main application
-│   ├── config/                    # Configuration files
-│   ├── modules/                   # Core modules
-│   ├── evaluation_strategies/     # Evaluation implementations
-│   └── utils/                     # Utility functions
-├── tests/                         # Test suite
-├── requirements.txt               # Dependencies
-└── README.md                      # Documentation
-```
-
-## Adding New Features
-
-### New Evaluation Strategy
-1. Create new class in `evaluation_strategies/`
-2. Inherit from `BaseEvaluationStrategy`
-3. Implement evaluation logic
-4. Register in processor
-
-### New Document Type
-1. Update `upload_config.yaml`
-2. Add processing logic
-3. Update validation rules
-
-## Testing
-```bash
-# Run tests
-python -m pytest tests/
-```
-
-## Contributing
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Create Pull Request
-
-## Development Setup
-
-### Prerequisites
-- Python 3.8 or higher
-- Git
-
-### Setting up the development environment
-
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/application-evaluation-system.git
-cd application-evaluation-system
-```
-
-2. Run the setup script:
-
-For Unix:
-```
 chmod +x setup_dev.sh
 ./setup_dev.sh
 ```
 
-For Windows:
+**For Windows:**
+
+*Basic setup:*
+```bat
+setup.bat
 ```
+
+*Development setup:*
+```bat
 setup_dev.bat
 ```
 
-This will:
-- Create a virtual environment
-- Install all dependencies
-- Set up pre-commit hooks
+### Secrets Configuration
 
-### Pre-commit hooks
+The app requires a secrets file for Streamlit to automatically load your API keys. A sample file is provided at `.streamlit/sample-secrets.toml`. 
 
-This project uses pre-commit hooks to maintain code quality. The following checks are performed before each commit:
+**Instructions:**
+- Rename `.streamlit/sample-secrets.toml` to `.streamlit/secrets.toml`.
+- Replace the placeholder key with your actual API key.
 
-- Black (code formatting)
-- isort (import sorting)
-- flake8 (linting)
-- Various file checks (trailing whitespace, YAML validation, etc.)
+Using a secrets file in this manner separates sensitive data from code, following security best practices.
 
-The hooks will automatically fix issues when possible. If they can't, the commit will be rejected with an explanation.
+## Demo Video
 
-To run the checks manually:
-```
-pre-commit run --all-files
-```
+Below is an embedded demo video showcasing the app in action:
 
-### Code Style
+<video controls>
+  <source src="demo/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
-This project follows:
-- Black code style
-- isort for import sorting
-- flake8 for linting
+## Frequently Asked Questions (FAQs)
 
-The configuration is maintained in:
-- `pyproject.toml` for Black and isort
-- `.flake8` for flake8
-```
+- **What example data can I use?**  
+  The **data** folder contains several examples that were used during testing. These can be directly utilized in your workflow.
 
-Now, whenever someone tries to commit code, the pre-commit hooks will:
-1. Format the code using Black
-2. Sort imports using isort
-3. Check code quality with flake8
-4. Perform other basic checks
+- **How does the PDF upload work?**  
+  The app supports PDF uploads; however, PDF conversion using Docling can be slow on PCs without GPUs. If you encounter delays, consider using the converted PDFs available in the examples folder.
 
-If any of these checks fail:
-- The commit will be prevented
-- The developer will be shown what needs to be fixed
-- In many cases, the issues will be fixed automatically
+- **Which setup script should I choose?**  
+  - Use **setup** for a basic installation that gets the app running.
+  - Use **setup_dev** for development work, as it installs additional tools like pre-commit hooks, linters, and formatters.
 
-To use this:
+- **Why do I need to configure a secrets file?**  
+  The secrets file allows Streamlit to load API keys securely. This practice avoids hardcoding sensitive information in your code, thereby improving overall security.
 
-1. Clone the repository
-2. Run the setup script
-3. Start developing
+- **What to do about Docling installation issues on Apple Silicone?**  
+  Users have reported problems with Docling on Apple Silicon. Consider checking the project's issue tracker or community forums for updated workarounds if you experience these errors.
 
-When you try to commit, the hooks will run automatically. If you want to run them manually:
-```bash
-pre-commit run --all-files
-```
+## Troubleshooting Common Setup Issues
 
-This setup ensures:
-- Consistent code formatting
-- Proper import organization
-- Basic code quality standards
-- Easy setup for new developers
+- Ensure you have Python 3.8 or higher installed.
+- Verify that you have the necessary permissions to execute the setup files.
+- If dependency installation fails, try running the commands manually within your virtual environment.
+- For pre-commit hook issues in development mode, run:
+  ```bash
+  pre-commit run --all-files
+  ```
+  to diagnose and fix formatting or linting problems.
+- For Apple Silicone-specific Docling issues, monitor the issue tracker for resolutions or alternative installation methods.
 
-The configuration can be adjusted by modifying the respective configuration files:
-- `.pre-commit-config.yaml` for pre-commit hooks
-- `pyproject.toml` for Black and isort
-- `.flake8` for flake8
+---
