@@ -49,6 +49,10 @@ def reset_session_state():
 def main():
     st.title("Admit Assist")
 
+    if not os.getenv("OPENAI_API_KEY"):
+        st.error("Missing required environment variable: OPENAI_API_KEY. Please set this variable before running the application.")
+        st.stop()
+
     initialize_session_state()
 
     config = load_config()

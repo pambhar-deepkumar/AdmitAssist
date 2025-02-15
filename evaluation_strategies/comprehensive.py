@@ -151,7 +151,7 @@ class ComprehensiveStrategy(BaseEvaluationStrategy):
 
         except Exception as e:
             st.error(
-                f"An error occurred during evaluating module:{module}. Please try again."
+                f"An error occurred during evaluating module. Please try again."
             )
             st.exception(e)
             return False, None
